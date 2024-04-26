@@ -5,6 +5,7 @@ import type {
 import { Calendar, useCalendar } from "@marceloterreiro/flash-calendar";
 import React, { memo, useMemo } from "react";
 import {
+  Button,
   StyleProp,
   StyleSheet,
   Text,
@@ -42,16 +43,7 @@ export const MCalendar = memo((props: MCalendarProps) => {
           <TouchableOpacity hitSlop={20} onPress={props.onPreviousMonthPress}>
             <View style={styles.circle} />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              props.onMonthYearChange(
-                dayjs(props.currentCalendarMonth).month(),
-                2020
-              );
-            }}
-          >
-            <Text>{calendarRowMonth}</Text>
-          </TouchableOpacity>
+          <Text>{calendarRowMonth}</Text>
           <TouchableOpacity hitSlop={20} onPress={props.onNextMonthPress}>
             <View style={styles.circle} />
           </TouchableOpacity>
@@ -89,6 +81,16 @@ export const MCalendar = memo((props: MCalendarProps) => {
             ))}
           </Calendar.VStack>
         </View>
+
+        <Button
+          title="Set Date to 2020"
+          onPress={() => {
+            props.onMonthYearChange(
+              dayjs(props.currentCalendarMonth).month(),
+              2020
+            );
+          }}
+        />
       </Calendar.VStack>
     </View>
   );
