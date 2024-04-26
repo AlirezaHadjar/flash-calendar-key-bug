@@ -1,45 +1,13 @@
-import {
-  CalendarActiveDateRange,
-  CalendarOnDayPress,
-  fromDateId,
-  toDateId,
-} from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import dayjs from "dayjs";
-import { useCallback, useMemo, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { MCalendar } from "./Calendar";
+import { useCallback, useState } from "react";
+import { Button, StyleSheet, View } from "react-native";
 
 export default function App() {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
-  );
   const [currentCalendarMonth, setCurrentCalendarMonth] = useState(new Date());
-
-  const handleDayPress = useCallback<CalendarOnDayPress>((dateId) => {
-    setCurrentCalendarMonth(fromDateId(dateId));
-    setSelectedDate(fromDateId(dateId));
-  }, []);
-
-  const calendarActiveDateRanges = useMemo<CalendarActiveDateRange[]>(() => {
-    if (!selectedDate) {
-      return [];
-    }
-    return [
-      {
-        startId: toDateId(selectedDate),
-        endId: toDateId(selectedDate),
-      },
-    ];
-  }, [selectedDate]);
 
   const handlePreviousMonth = useCallback(() => {
     const newDate = dayjs(currentCalendarMonth).subtract(1, "month").toDate();
-
-    setCurrentCalendarMonth(newDate);
-  }, [currentCalendarMonth]);
-
-  const handleNextMonth = useCallback(() => {
-    const newDate = dayjs(currentCalendarMonth).add(1, "month").toDate();
 
     setCurrentCalendarMonth(newDate);
   }, [currentCalendarMonth]);
@@ -57,15 +25,20 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <MCalendar
-        calendarActiveDateRanges={calendarActiveDateRanges}
+      <Calendar
         calendarMonthId={toDateId(currentCalendarMonth)}
-        currentCalendarMonth={currentCalendarMonth}
-        onCalendarDayPress={handleDayPress}
-        onNextMonthPress={handleNextMonth}
-        onMonthYearChange={handleMonthYearChange}
-        onPreviousMonthPress={handlePreviousMonth}
+        getCalendarWeekDayFormat={(date) => dayjs(date).format("ddd")}
+        onCalendarDayPress={(dateId) => {
+          console.log(`Clicked on ${dateId}`);
+        }}
       />
+      <Button
+        title="Set Year to 2020"
+        onPress={() => {
+          handleMonthYearChange(dayjs(currentCalendarMonth).month(), 2020);
+        }}
+      />
+      <Button title="Reduce Month by 1" onPress={handlePreviousMonth} />
     </View>
   );
 }
@@ -73,10 +46,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 200,
     paddingHorizontal: 20,
+    paddingTop: 200,
   },
 });
