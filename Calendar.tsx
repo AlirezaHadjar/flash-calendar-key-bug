@@ -83,7 +83,7 @@ export const MCalendar = memo((props: MCalendarProps) => {
         </View>
 
         <Button
-          title="Set Date to 2020"
+          title="Set Year to 2020"
           onPress={() => {
             props.onMonthYearChange(
               dayjs(props.currentCalendarMonth).month(),
